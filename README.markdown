@@ -3,7 +3,7 @@
 
 # Overview
 
-Forked from the excelent [libgif-js project](https://github.com/buzzfeed/libgif-js), which is a general-purpose gif parsing and playback framework. 
+Forked from the excellent [libgif-js project](https://github.com/buzzfeed/libgif-js), which is a general-purpose gif parsing and playback framework. 
 
 This is an attempt to animate a GIF file in sync with the [SpeechSynthesis web API](https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis).  The following tricks are used to improve results:
 
@@ -14,6 +14,16 @@ This is an attempt to animate a GIF file in sync with the [SpeechSynthesis web A
 * the gif "ping-pongs" while there is talking, and always starts and ends at frame 0.  (the direction of playback is reversed at the correct time such that playback ends at frame zero)  
 
 * speech synthesis is broken up into punctuation-deliminated [.,?!] utterances, and each utterance is animated with its own call to play_with_duration.  Pauses in the utterances are then automatically aligned with periods of non-movement in the GIF file.
+
+To the original project we added a websocket listener and a server component: 
+
+* The script in the web page just open a websocket toward the server on the (ws://localhost:80/ws) url
+
+* The script in the web page select the first TTS engine available in the browser that matches the locale variable
+
+* The server randomly sends a sentence to the client page
+
+* Because of browser policies, to let the TTS engine actually emit sounds the user must explicly interact with the page: in this current version to start the TTS you must click on the avatar.
 
 # GIF Selection
 
@@ -115,6 +125,6 @@ Prior to playing, the frames of the GIF file must be extracted and stored in mem
 
 ## Caveat: same-domain origin
 
-The gif has to be on the same domain (and port and protocol) as the page you're loading.
+The gif has to be on the same domain (and port and protocol) as the page you're loading. In the directory img there is a sample image took from imgur.
 
 The library works by parsing gif image data in js, extracting individual frames, and rendering them on a canvas element. There is no way to get the raw image data from a normal image load, so this library does an XHR request for the image and forces the MIME-type to "text/plain". Consequently, using this library is subject to all the same cross-domain restrictions as any other XHR request.
