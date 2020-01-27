@@ -20,7 +20,7 @@ const hostname = 'localhost'
 const port = 8080
 
 function requestListener(request, response) {
-    console.log('request starting...');
+    console.log('Request received');
 
     if (request.url == '/ws' && request.headers.upgrade &&
         request.headers.upgrade.toLowerCase() == 'websocket' &&
@@ -79,7 +79,7 @@ function requestListener(request, response) {
 
 function onSocketConnect(ws) {
     clients.add(ws);
-    console.log(`websocket new connection`);
+    console.log(`Websocket new connection`);
 
     if (clients.size == 1) {
         intervalHandler = setInterval(() => {
@@ -87,13 +87,13 @@ function onSocketConnect(ws) {
 
             for (let client of clients) {
                 client.send(message);
-                console.log(message);
+                console.log("Sending message: '" + message + "'");
             }
         }, messageInterval);
     }
 
     ws.on('close', function () {
-        console.log("websocket connection closed");
+        console.log("Websocket connection closed");
         clients.delete(ws);
 
         if (clients.size == 0)
